@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .text1 {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: white;
+            font-weight: bold;
+            background-color: #9211e9;
+            animation: zhuan 10s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .text1:hover {
+            animation-play-state: running
+        }
+
+        @keyframes zhuan {
+            0% {
+                transform: rotate(0);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        .text2 {
+            width: 200px;
+            height: 50px;
+            background: rgb(16, 206, 212);
+            margin: 30px;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .text3 {
+            width: 50px;
+            height: 200px;
+            margin: 30px;
+            border-radius: 5px;
+            background: rgb(9, 180, 38);
+        }
+
+        #text {
+            /* 设置字体由上往下排列,当然直接文本设置也可以，但是文字的朝向却没办法通过rotate控制 */
+            writing-mode: vertical-rl;
+            font-size: 20px;
+            letter-spacing: 0.4em;
+        }
+    </style>
+</head>
+
+<body>
+<!-- 实现文字垂直排列 -->
+<div class="text3">
+    <svg viewBox='0 0 50 380' width="50" height="200">
+        <text style="fill: white;" id="text" x="25" y="30" rotate='-90'>writing vertical text</text>
+    </svg>
+</div>
+
+<!-- 实现文字跟随路径排列 -->
+<div class="text1">
+    <!-- view='x,y,width,height' -->
+    <!-- x,y  相当于 svg 左上角的横坐标和纵坐标 -->
+    <svg viewBox='-50 -50 300 300' width="200" height="200">
+        <!-- 实现文字跟随路径排列 -->
+        <defs>
+            <!--  M x y 起始位置坐标 M100 0 圆所开始的坐标点  a100 100 圆的半径 -->
+            <path id="circle" d="M100 0 a100 100 0 1 1 -1 0"></path>
+        </defs>
+        <text>
+            <textPath xlink:href="#circle" style="fill: white;">
+                Text following a circle.............
+            </textPath>
+        </text>
+    </svg>
+</div>
+
+<!-- 旋转文字方向 -->
+<div class="text2">
+    <svg width="200" height="50">
+        <!-- x y 坐标位置 -->
+        <text x="7" y="30" style="fill: white;">
+            It’s
+            <!-- dx dy 定义文字所在坐标的位置  此处有6个字符，所以有6个坐标值 -->
+            <!-- rotate 为每个字符的旋转度数 -->
+            <tspan style="fill: yellow;" dx="0 4 -3 5 -4 6" dy="0 -3 7 3 -2 -8" rotate="5 10 -5 -20 0 15">shaken
+            </tspan>, not stirred.
+        </text>
+    </svg>
+</div>
+
+
+</body>
+
+</html>
