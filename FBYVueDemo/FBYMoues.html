@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #warp {
+            width: 200px;
+            height: 200px;
+            background: rgb(109, 47, 255);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .text {
+            position: relative;
+            z-index: 5;
+        }
+
+        .cover {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.397);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* 进入动画 */
+        .cover.topEnter {
+            opacity: 1;
+            animation: topEnter .3s ease both 1;
+        }
+
+        .cover.rightEnter {
+            opacity: 1;
+            animation: rightEnter .3s ease both 1;
+        }
+
+        .cover.bottomEnter {
+            opacity: 1;
+            animation: bottomEnter .3s ease both 1;
+        }
+
+        .cover.leftEnter {
+            opacity: 1;
+            animation: leftEnter .3s ease both 1;
+        }
+
+        /* 移出动画 */
+        .cover.topLeave {
+            opacity: 1;
+            animation: topLeave .3s ease both 1;
+        }
+
+        .cover.rightLeave {
+            opacity: 1;
+            animation: rightLeave .3s ease both 1;
+        }
+
+        .cover.bottomLeave {
+            opacity: 1;
+            animation: bottomLeave .3s ease both 1;
+        }
+
+        .cover.leftLeave {
+            opacity: 1;
+            animation: leftLeave .3s ease both 1;
+        }
+
+        /* 进入动画 */
+        @keyframes topEnter {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes rightEnter {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bottomEnter {
+            0% {
+                transform: translateY(100%);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes leftEnter {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        /* 移出动画 */
+        @keyframes topLeave {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-100%);
+            }
+        }
+
+        @keyframes rightLeave {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes bottomLeave {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @keyframes leftLeave {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div id="warp">
+    <span class="text">MOVE</span>
+    <div class="cover"></div>
+</div>
+</body>
+<script>
+  // 获取容器
+  let warp = document.getElementById('warp')
+  // 获取遮罩层
+  let cover = document.querySelector('.cover')
+  let text = document.querySelector('.text')
+  // 获取容器的相关属性
+  let _this = warp.getBoundingClientRect();
+  let w = _this.width
+  let h = _this.height
+  let offsetLeft = _this.left
+  let offsetTop = _this.top
+  // 定义一个方向的数组
+  let dirName = new Array('top', 'right', 'bottom', 'left');
+
+  // 监听鼠标进入容器时
+  warp.addEventListener('mouseenter', function (e) {
+    let x = (e.pageX - offsetLeft - (w / 2)) * (w > h ? (h / w) : 1);
+    let y = (e.pageY - offsetTop - (h / 2)) * (h > w ? (w / h) : 1);
+    // 用来获取移入的方位
+    // 通过Math.atan2 计算角度 https://www.jianshu.com/p/9817e267925a
+    let direction = Math.round((((Math.atan2(y, x) * (180 / Math.PI)) + 180) / 90) + 3) % 4;
+    let dirText = dirName[direction];
+    text.innerHTML = dirText + ' Enter' //文字修改
+    // 通过移入方位，添加移入动画class
+    switch (dirText) {
+      case 'top':
+        cover.setAttribute("class", "cover topEnter");
+        break;
+      case 'right':
+        cover.setAttribute("class", "cover rightEnter");
+        break;
+      case 'bottom':
+        cover.setAttribute("class", "cover bottomEnter");
+        break;
+      case 'left':
+        cover.setAttribute("class", "cover leftEnter");
+        break;
+      default:
+        break;
+    }
+  })
+  // 监听鼠标移出容器时
+  warp.addEventListener('mouseleave', function (e) {
+    let x = (e.pageX - offsetLeft - (w / 2)) * (w > h ? (h / w) : 1);
+    let y = (e.pageY - offsetTop - (h / 2)) * (h > w ? (w / h) : 1);
+    // 用来获取移入的方位
+    // 通过Math.atan2 计算角度 https://www.jianshu.com/p/9817e267925a
+    let direction = Math.round((((Math.atan2(y, x) * (180 / Math.PI)) + 180) / 90) + 3) % 4;
+    let dirText = dirName[direction];
+    text.innerHTML = dirText + ' Leave';//文字修改
+    // 通过移入方位，添加移出动画class
+    switch (dirText) {
+      case 'top':
+        cover.setAttribute("class", "cover topLeave");
+        break;
+      case 'right':
+        cover.setAttribute("class", "cover rightLeave");
+        break;
+      case 'bottom':
+        cover.setAttribute("class", "cover bottomLeave");
+        break;
+      case 'left':
+        cover.setAttribute("class", "cover leftLeave");
+        break;
+      default:
+        break;
+    }
+  })
+</script>
+
+</html>
